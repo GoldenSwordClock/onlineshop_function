@@ -1,4 +1,4 @@
 {
-    "ip":"localhost",
-    "port":"3306"
+    "database":{"ip":"localhost",
+    "port":"3306"}
 }
