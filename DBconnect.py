@@ -1,4 +1,4 @@
-import MySQLdb
+#import MySQLdb
 
 class DB:
     def __init__(self):
@@ -22,8 +22,9 @@ class DB:
         self.password = password
 
     def connect(self):
-        self.db = MySQLdb.connect(self.ip, self.port, self.username, self.password)
+        #self.db = MySQLdb.connect(self.ip, self.port, self.username, self.password)
         return self.db
 
     def close(self):
-        self.db.close()
+        pass
+		#self.db.close()
