@@ -4,15 +4,12 @@ import json
 #import MySQLdb
 import base64
 from urllib import parse
+from handler_func import *
 
 config = { 'database':{'ip':'localhost','port':3306 }  }
 
-
-
 def unpack_instr( pack_instr ):
     pass
-
-
 
 class App:
     
@@ -38,9 +35,10 @@ class App:
         print( "---Analysis End" )
 
     def getresponse(self):
-        response = writeHeader()
-        response['body'] = self.bodydata
+        response = writeHeader(body=self.responcebody)
+
         return response
+
     def handler(self):
         print("---Handler begin")
         if self.httpMethod=='POST':
@@ -54,9 +52,19 @@ class App:
 
     def handler_POST(self):
         print("handler a post request:\n",self.bodydata )
+
         
     def handler_GET(self):
-        print("handler a get request:\n",self.bodydata )
+        print("handler a get request:\n",self.queryStringParameters )
+        reqtype = self.queryStringParameters['type']
+        self.responcebody = ""
+        if reqtype=='getHomeHotData':
+            self.responcebody = getHomeHotData()
+        elif reqtype=='getHomeRecommendData':
+            self.responcebody = getHomeRecommendData()
+        else:
+            print( "Handler ERROR: ","unkonwn request type %s"%reqtype )
+        
 
 def handler(event, context):
     myApp = App()
@@ -66,5 +74,5 @@ def handler(event, context):
     return response;
 
 if __name__ == "__main__":
-    event = {'requestContext': {'requestId': 'd19afa0b3f82c2552f3e6c787d01576b', 'apiId': '01a9a109570c47e0ba3f4b06aed29d90', 'stage': 'RELEASE'}, 'queryStringParameters': {}, 'path': '/test', 'httpMethod': 'POST', 'isBase64Encoded': 'True', 'headers': {'host': 'a08fcdddeeee4c02a38700f35091372c.apig.cn-south-1.huaweicloudapis.com', 'content-type': 'application/x-www-form-urlencoded', 'x-real-ip': '202.113.189.186', 'connection': 'keep-alive', 'sec-ch-ua-mobile': '?0', 'sec-fetch-site': 'cross-site', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8080/', 'sec-ch-ua': '\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"', 'origin': 'http://localhost:8080', 'x-forwarded-host': 'a08fcdddeeee4c02a38700f35091372c.apig.cn-south-1.huaweicloudapis.com', 'accept': 'application/json, text/plain, */*', 'x-forwarded-port': '443', 'x-forwarded-proto': 'https', 'content-length': '35', 'accept-encoding': 'gzip, deflate, br', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36', 'x-forwarded-for': '202.113.189.186', 'x-request-id': 'd19afa0b3f82c2552f3e6c787d01576b', 'accept-language': 'zh-CN,zh;q=0.9', 'sec-fetch-mode': 'cors'}, 'body': 'bmFtZT1qaWFuamlhbiZhZ2U9MjEmc2V4PSVFNSVBNSVCMyY=', 'pathParameters': {}}
+    event = {'requestContext': {'requestId': 'f5423a60ceb8ca5356156312b4a49c34', 'apiId': '01a9a109570c47e0ba3f4b06aed29d90', 'stage': 'RELEASE'}, 'queryStringParameters': {'type': 'getHomeHotData'}, 'path': '/test', 'httpMethod': 'GET', 'isBase64Encoded': 'True', 'headers': {'host': 'a08fcdddeeee4c02a38700f35091372c.apig.cn-south-1.huaweicloudapis.com', 'x-real-ip': '202.113.176.63', 'connection': 'keep-alive', 'x-forwarded-port': '443', 'x-forwarded-host': 'a08fcdddeeee4c02a38700f35091372c.apig.cn-south-1.huaweicloudapis.com', 'x-forwarded-for': '202.113.176.63', 'x-forwarded-proto': 'https', 'referer': 'http://localhost:8080/', 'accept-encoding': 'gzip, deflate, br', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36', 'x-request-id': 'f5423a60ceb8ca5356156312b4a49c34', 'accept-language': 'zh-CN,zh;q=0.9,es-ES;q=0.8,es;q=0.7', 'origin': 'http://localhost:8080', 'accept': 'application/json, text/plain, */*'}, 'body': '', 'pathParameters': {}}
     print( "\nresult=\n",handler(event,"") )
